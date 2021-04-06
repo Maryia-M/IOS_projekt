@@ -49,7 +49,6 @@ class ViewController: UIViewController{
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "StockDetails", let stockDetailsVC = segue.destination as? StockDetailsViewController,
            let stock = sender as? (object: StockObject, image: UIImage?, isFavourite:Bool){
-            print("I'm sending")
             stockDetailsVC.stock = stock
             }
         
@@ -57,7 +56,7 @@ class ViewController: UIViewController{
     
     private func requestInitialData(){
         let stockManager = StockManager()
-        let components = stockManager.search()
+        let components = stockManager.makeInitialDataURL()
 
         guard let url = components.url else{
                 return
@@ -74,6 +73,7 @@ class ViewController: UIViewController{
             
             dataTask.resume()
     }
+    
     private func parseInitialData(from data: Data) {
 
         var stockArr = [(object: StockObject, image: UIImage?, isFavourite:Bool)]()

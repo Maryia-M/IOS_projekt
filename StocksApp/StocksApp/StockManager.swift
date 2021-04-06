@@ -35,21 +35,32 @@ extension StockManager{
     struct StockManagerAPI{
         static let scheme = "https"
         static let host = "cloud.iexapis.com"
+        static let token = "pk_2daee599f0244e859f0a0f11989760c4"
     }
     
-    func search() -> URLComponents{
+    func makeInitialDataURL() -> URLComponents{
         let companies = tickers.joined(separator: ",")
         print(companies)
         var components = URLComponents()
         components.scheme = StockManagerAPI.scheme
         components.host = StockManagerAPI.host
         components.path = "/stable/stock/market/batch"
-        components.queryItems = [URLQueryItem(name: "token", value: "pk_2daee599f0244e859f0a0f11989760c4"),
+        components.queryItems = [URLQueryItem(name: "token", value: StockManagerAPI.token),
                                  URLQueryItem(name: "symbols", value: companies),
                                  URLQueryItem(name: "types", value: "quote,logo")
         ]
-        return components;
+        return components
     }
+    
+    func makeDescriptionURL(ticker: String) -> URLComponents{
+        var components = URLComponents()
+        components.scheme = StockManagerAPI.scheme
+        components.host = StockManagerAPI.host
+        components.path = "/stable/stock/\(ticker)/company"
+        components.queryItems = [URLQueryItem(name: "token", value: StockManagerAPI.token)]
+        return components
+    }
+    
     
     
 }
