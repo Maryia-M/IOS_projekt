@@ -64,10 +64,11 @@ class StockDetailsViewController: UIViewController {
     }
     
     private func displayCompanyInfo(description: CompanyDescription){
-        nameLabel.text = description.companyName
-        websiteLabel.text = description.website
-        addressLabel.text = "\(description.city ?? ""), \(description.country ?? "")"
-        descriptionLabel.text = description.description
+        nameLabel.text = description.companyName.count > 0 ? description.companyName : "-"
+        websiteLabel.text = description.website.count > 0 ? description.website : "-"
+        let address = "\(description.city ?? ""), \(description.country ?? "")"
+        addressLabel.text = address.count > 2 ? address : "-"
+        descriptionLabel.text = description.description.count > 0 ? description.description : "-"
     }
 
     /*
