@@ -43,5 +43,24 @@ class TableCell: UITableViewCell {
     public func makeSelected(selected: Bool){
         favouriteButton.isSelected = selected        
     }
+    
+    public func updateInterface(with data: (object: StockObject, image: UIImage?, isFavourite:Bool)?){
+        let priceChange: Double = (data?.object.quote.change ?? 0)
+        companyNameLabel.text = data?.object.quote.companyName
+        tickerLabel.text = data?.object.quote.symbol
+        priceLabel.text = String(data?.object.quote.latestPrice ?? 0) + "$"
+        priceChangeLabel.text = String(data?.object.quote.change ?? 0) + "$"
+        if priceChange > 0{
+            priceChangeLabel.textColor = UIColor.green
+        }
+        else if priceChange < 0{
+            priceChangeLabel.textColor = UIColor.red
+        }
+        else{
+            priceChangeLabel.textColor = UIColor.black
+        }
+        logoImage.image = data?.image
+        
+        makeSelected(selected: (data?.isFavourite) ?? false)    }
 
 }

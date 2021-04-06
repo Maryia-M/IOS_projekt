@@ -14,22 +14,7 @@ class ViewController: UIViewController{
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    private lazy var tickers = [
-            "AAPL",
-            "MSFT",
-            "GOOG",
-            "AMZN",
-            "FB",
-            "INTC",
-            "YNDX",
-            "CSCO",
-            "ORCL",
-            "BKNG",
-            "UBER",
-            "FDX",
-            "BIDU"
-        ]
-    
+       
     private var stockArray: [(object: StockObject, image: UIImage?, isFavourite:Bool)]?{
         didSet{
             DispatchQueue.main.async{
@@ -45,28 +30,36 @@ class ViewController: UIViewController{
     
     private var search = ""
     
-    private var ticker_to_id = [String: Int]()
+    private var tickerToId: [String: Int] = [:]
     
     override func viewDidLoad() {
            
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        print(tickers)
+
         requestInitialData()
         tableView.dataSource = self
         tableView.delegate = self
         searchBar.delegate = self
+        tableView.rowHeight = 80
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "StockDetails", let stockDetailsVC = segue.destination as? StockDetailsViewController,
+           let stock = sender as? (object: StockObject, image: UIImage?, isFavourite:Bool){
+            print("I'm sending")
+            stockDetailsVC.stock = stock
+            }
         
     }
     
     private func requestInitialData(){
-            let companies = tickers.joined(separator: ",")
-            print(companies)
-            let token = "pk_2daee599f0244e859f0a0f11989760c4"
-            
-            guard let url = URL(string:
-                                    "https://cloud.iexapis.com/stable/stock/market/batch?symbols=\(companies)&types=quote,logo&token=\(token)") else{
+        let stockManager = StockManager()
+        let components = stockManager.search()
+
+        guard let url = components.url else{
                 return
             }
             print(url)
@@ -80,41 +73,39 @@ class ViewController: UIViewController{
             }
             
             dataTask.resume()
-        }
-        
-    
-    private func parseInitialData(from data: Data){
+    }
+    private func parseInitialData(from data: Data) {
 
+        var stockArr = [(object: StockObject, image: UIImage?, isFavourite:Bool)]()
         do{
             let res = try JSONDecoder().decode([String:StockObject].self,from: data)
             print(res)
-            var stockArr = [(object: StockObject, image: UIImage?, isFavourite:Bool)]()
+            
             var id = 0
-            for (_, value) in res{
+            let sortedKeys = res.keys.sorted();
+            for key in sortedKeys{
+                let value = res[key]
                 var current_image: UIImage?
-                if let imageData = try? Data(contentsOf: URL(string: value.logo.url)!){
+                if let imageData = try? Data(contentsOf: URL(string: value!.logo.url)!){
                             if let image = UIImage(data: imageData) {
                                 current_image = image
                             }
                 }
-                stockArr.append((object: value, image: current_image, isFavourite: false))
-                ticker_to_id[value.quote.symbol] = id
+                stockArr.append((object: value!, image: current_image, isFavourite: false))
+                tickerToId[value!.quote.symbol] = id
                 id += 1
             }
-                
             stockArray = stockArr
-            currentStockArray = stockArray
+            currentStockArray = stockArr
             
         }
         catch{
                 print("JSON parsing error: " + error.localizedDescription)
         }
-        
     }
-
 }
 
-extension ViewController: UITableViewDataSource, UITableViewDelegate{
+extension ViewController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return currentStockArray?.count ?? 0
@@ -126,29 +117,13 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate{
             return UITableViewCell()
         }
 
-        let priceChange: Double = (currentStockArray?[indexPath.row].object.quote.change ?? 0)
-        cell.companyNameLabel.text = currentStockArray?[indexPath.row].object.quote.companyName
-        cell.tickerLabel.text = currentStockArray?[indexPath.row].object.quote.symbol
-        cell.priceLabel.text = String(currentStockArray?[indexPath.row].object.quote.latestPrice ?? 0) + "$"
-        cell.priceChangeLabel.text = String(currentStockArray?[indexPath.row].object.quote.change ?? 0) + "$"
-        cell.logoImage.image = currentStockArray?[indexPath.row].image
-        if priceChange > 0{
-            cell.priceChangeLabel.textColor = UIColor.green
-        }
-        else if priceChange < 0{
-            cell.priceChangeLabel.textColor = UIColor.red
-        }
-        else{
-            cell.priceChangeLabel.textColor = UIColor.black
-        }
+        cell.updateInterface(with: currentStockArray?[indexPath.row])
+        
+        
         cell.cellDelegate = self
         cell.index = indexPath
-        cell.makeSelected(selected: (currentStockArray?[indexPath.row].isFavourite) ?? false)
+        
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
     }
     
 }
@@ -209,10 +184,17 @@ extension ViewController: TableViewCellProtocol{
     func onClickCell(index: Int) {
         currentStockArray![index].isFavourite = !(currentStockArray![index].isFavourite)
         let ticker = currentStockArray![index].object.quote.symbol
-        let id = ticker_to_id[ticker]
+        let id = tickerToId[ticker]
         stockArray![id!].isFavourite = !(stockArray![id!].isFavourite)
     }
     
 }
 
+extension ViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(indexPath.row)
+        let stock = currentStockArray?[indexPath.row]
+        performSegue(withIdentifier: "StockDetails", sender: stock)
+    }
+}
 

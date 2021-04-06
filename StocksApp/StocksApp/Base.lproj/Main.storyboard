@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="TRy-jy-CCk">
     <device id="retina6_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mXq-ny-W6c">
-                                <rect key="frame" x="0.0" y="44" width="428" height="848"/>
+                                <rect key="frame" x="0.0" y="88" width="428" height="804"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" showsScopeBar="YES" id="hct-DI-5eE">
                                     <rect key="frame" x="0.0" y="0.0" width="428" height="56"/>
@@ -120,19 +120,77 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="mXq-ny-W6c" secondAttribute="bottom" id="vBv-f9-tdk"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="F8Z-uo-Plu"/>
                     <connections>
                         <outlet property="searchBar" destination="hct-DI-5eE" id="48e-FI-G7s"/>
                         <outlet property="tableView" destination="mXq-ny-W6c" id="knh-IH-ctS"/>
+                        <segue destination="GAA-2K-hfe" kind="show" identifier="StockDetails" id="LDG-Ll-0UT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1040.1869158878503" y="61.555075593952488"/>
+        </scene>
+        <!--Stock Details View Controller-->
+        <scene sceneID="808-MW-2CR">
+            <objects>
+                <viewController id="GAA-2K-hfe" customClass="StockDetailsViewController" customModule="StocksApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Sw6-9l-aUg">
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="838"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoImage" translatesAutoresizingMaskIntoConstraints="NO" id="TNi-1d-SnE">
+                                <rect key="frame" x="10" y="10" width="192" height="192"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="192" id="I4d-Mu-jZJ"/>
+                                    <constraint firstAttribute="width" secondItem="TNi-1d-SnE" secondAttribute="height" multiplier="1:1" id="Vub-me-7Z5"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Flv-gt-JXv"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="TNi-1d-SnE" firstAttribute="top" secondItem="Flv-gt-JXv" secondAttribute="top" constant="10" id="6yf-15-Emz"/>
+                            <constraint firstItem="TNi-1d-SnE" firstAttribute="leading" secondItem="Flv-gt-JXv" secondAttribute="leading" constant="10" id="xBp-f8-Wzh"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="b4E-JY-iUU"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <connections>
+                        <outlet property="logoImageView" destination="TNi-1d-SnE" id="jbJ-BZ-ZMZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BPe-ZM-cEy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1926.1682242990653" y="67.386609071274307"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Iuo-sV-cqc">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="TRy-jy-CCk" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jpV-my-Man">
+                        <rect key="frame" x="0.0" y="44" width="428" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="qoF-es-5WX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fVU-it-dFX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
             <point key="canvasLocation" x="140.18691588785046" y="61.555075593952488"/>
         </scene>
     </scenes>
+    <color key="tintColor" systemColor="labelColor"/>
     <resources>
         <image name="checkbox_off" width="200" height="200"/>
         <image name="checkbox_on" width="200" height="200"/>
+        <image name="logoImage" width="128" height="128"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

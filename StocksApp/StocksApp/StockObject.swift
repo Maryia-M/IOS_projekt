@@ -6,23 +6,25 @@
 //
 
 import Foundation
+import UIKit
 
-struct StockData : Decodable{
+
+struct StockData : Codable{
     let item: [String : StockObject]
 }
 
-struct StockObject: Decodable{
+struct StockObject: Codable{
     let quote: Quote
     let logo: Logo
 }
 
-struct Quote: Decodable{
+struct Quote: Codable{
     let companyName: String
     let symbol: String
     let latestPrice: Double
     let change: Double
 }
 
-struct Logo: Decodable{
+struct Logo: Codable{
     let url: String
 }
