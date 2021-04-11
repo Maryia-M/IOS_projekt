@@ -13,10 +13,14 @@ class StockDetailsViewController: UIViewController {
     
 
     @IBOutlet weak var nameLabel: UILabel!
+
     @IBOutlet weak var websiteLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
-    @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var changeLabel: UILabel!
+    @IBOutlet weak var logoImageView: UIImageView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         nameLabel.text = "-"
@@ -64,7 +68,20 @@ class StockDetailsViewController: UIViewController {
     }
     
     private func displayCompanyInfo(description: CompanyDescription){
-        nameLabel.text = description.companyName.count > 0 ? description.companyName : "-"
+        let name = "\(description.companyName)"
+        nameLabel.text = name.count > 0 ? name : "-"
+        let priceChange = stock?.object.quote.change
+        priceLabel.text = String(stock?.object.quote.latestPrice ?? 0) + "$"
+        changeLabel.text = String(stock?.object.quote.change ?? 0) + "$"
+        if priceChange! > 0{
+            changeLabel.textColor = UIColor.green
+        }
+        else if priceChange! < 0{
+            changeLabel.textColor = UIColor.red
+        }
+        else{
+            changeLabel.textColor = UIColor.black
+        }
         websiteLabel.text = description.website.count > 0 ? description.website : "-"
         let address = "\(description.city ?? ""), \(description.country ?? "")"
         addressLabel.text = address.count > 2 ? address : "-"
